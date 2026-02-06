@@ -40,12 +40,19 @@ export default async function GenreDetailPage({ params }: GenrePageProps) {
     .neq("id", genre.id)
     .limit(8);
 
-  const songs = (songRows ?? []).map((song) => ({
-    id: song.id,
-    title: song.title,
-    artist: song.artist?.name ?? "Unknown Artist",
-    coverUrl: song.cover_url ?? undefined,
-  }));
+  const songs = (songRows ?? []).map((song) => {
+    const artistRelation = (song as { artist?: { name?: string } | { name?: string }[] })
+      .artist;
+    const artistName = Array.isArray(artistRelation)
+      ? artistRelation[0]?.name
+      : artistRelation?.name;
+    return {
+      id: song.id,
+      title: song.title,
+      artist: artistName ?? "Unknown Artist",
+      coverUrl: song.cover_url ?? undefined,
+    };
+  });
 
   const genreItems = (relatedGenres ?? []).map((item) => ({
     id: item.id,

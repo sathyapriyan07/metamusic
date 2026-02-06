@@ -40,6 +40,11 @@ export default async function SongPage({ params }: SongPageProps) {
       const artistName = Array.isArray(artistRelation)
         ? artistRelation[0]?.name
         : artistRelation?.name;
+      const albumRelation = (songRow as { albums?: { title?: string } | { title?: string }[] })
+        .albums;
+      const albumTitle = Array.isArray(albumRelation)
+        ? albumRelation[0]?.title
+        : albumRelation?.title;
       song = {
         title: songRow.title,
         artist: artistName ?? "Unknown Artist",
@@ -48,7 +53,7 @@ export default async function SongPage({ params }: SongPageProps) {
         language: songRow.language ?? "",
         lyrics: songRow.lyrics ?? "",
         release_date: songRow.release_date?.toString() ?? "",
-        album: songRow.albums?.title ?? "",
+        album: albumTitle ?? "",
       };
     }
   }

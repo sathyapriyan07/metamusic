@@ -36,9 +36,12 @@ export default async function AlbumPage({ params }: AlbumPageProps) {
     .single();
 
   if (albumRow) {
+    const artistName = Array.isArray(albumRow.artist)
+      ? albumRow.artist[0]?.name
+      : albumRow.artist?.name;
     album = {
       title: albumRow.title,
-      artist: albumRow.artist?.name ?? "Unknown Artist",
+      artist: artistName ?? "Unknown Artist",
       cover_url: albumRow.cover_url ?? "",
       description: albumRow.description ?? "",
       release_date: albumRow.release_date?.toString() ?? "",

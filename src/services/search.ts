@@ -1,5 +1,4 @@
 import { createSupabaseBrowserClient } from "@/lib/supabase/client";
-import { Album, Artist, Playlist, Song } from "@/types";
 
 const supabase = createSupabaseBrowserClient();
 
@@ -40,9 +39,33 @@ export async function searchAll(query: string) {
   ]);
 
   return {
-    songs: (songs.data ?? []) as (Song & { artist?: { name: string } | null })[],
-    albums: (albums.data ?? []) as (Album & { artist?: { name: string } | null })[],
-    artists: (artists.data ?? []) as Artist[],
-    playlists: (playlists.data ?? []) as Playlist[],
+    songs: (songs.data ?? []).map((song) => {
+      const artistRelation = (song as { artist?: { name?: string } | { name?: string }[] })
+        .artist;
+      const artistName = Array.isArray(artistRelation)
+        ? artistRelation[0]?.name
+        : artistRelation?.name;
+      return {
+        id: song.id,
+        title: song.title,
+        cover_url: song.cover_url ?? null,
+        artist: artistName ? { name: artistName } : null,
+      };
+    }),
+    albums: (albums.data ?? []).map((album) => {
+      const artistRelation = (album as { artist?: { name?: string } | { name?: string }[] })
+        .artist;
+      const artistName = Array.isArray(artistRelation)
+        ? artistRelation[0]?.name
+        : artistRelation?.name;
+      return {
+        id: album.id,
+        title: album.title,
+        cover_url: album.cover_url ?? null,
+        artist: artistName ? { name: artistName } : null,
+      };
+    }),
+    artists: (artists.data ?? []) as unknown as Array<{ id: string; name: string; image_url?: string | null; country?: string | null }>,
+    playlists: (playlists.data ?? []) as unknown as Array<{ id: string; title: string; description?: string | null; cover_url?: string | null }>,
   };
 }

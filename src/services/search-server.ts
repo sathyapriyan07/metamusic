@@ -24,13 +24,20 @@ export async function searchMetadata(params: SearchParams) {
       .range(offset, offset + limit);
 
     return {
-      items: (data ?? []).map((song) => ({
-        id: song.id,
-        title: song.title,
-        subtitle: song.artists?.name ?? "Unknown Artist",
-        imageUrl: song.cover_url ?? undefined,
-        href: `/song/${song.id}`,
-      })),
+      items: (data ?? []).map((song) => {
+        const artistRelation = (song as { artist?: { name?: string } | { name?: string }[] })
+          .artist;
+        const artistName = Array.isArray(artistRelation)
+          ? artistRelation[0]?.name
+          : artistRelation?.name;
+        return {
+          id: song.id,
+          title: song.title,
+          subtitle: artistName ?? "Unknown Artist",
+          imageUrl: song.cover_url ?? undefined,
+          href: `/song/${song.id}`,
+        };
+      }),
       count: count ?? 0,
     };
   }
@@ -48,13 +55,20 @@ export async function searchMetadata(params: SearchParams) {
     const { data, count } = await queryBuilder.range(offset, offset + limit);
 
     return {
-      items: (data ?? []).map((album) => ({
-        id: album.id,
-        title: album.title,
-        subtitle: album.artists?.name ?? album.genre ?? "Unknown Artist",
-        imageUrl: album.cover_url ?? undefined,
-        href: `/album/${album.id}`,
-      })),
+      items: (data ?? []).map((album) => {
+        const artistRelation = (album as { artist?: { name?: string } | { name?: string }[] })
+          .artist;
+        const artistName = Array.isArray(artistRelation)
+          ? artistRelation[0]?.name
+          : artistRelation?.name;
+        return {
+          id: album.id,
+          title: album.title,
+          subtitle: artistName ?? album.genre ?? "Unknown Artist",
+          imageUrl: album.cover_url ?? undefined,
+          href: `/album/${album.id}`,
+        };
+      }),
       count: count ?? 0,
     };
   }

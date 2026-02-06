@@ -61,20 +61,34 @@ export default async function ArtistPage({ params }: ArtistPageProps) {
     .limit(6);
 
   if (songRows) {
-    topSongs = songRows.map((song) => ({
-      id: song.id,
-      title: song.title,
-      artist: song.artist?.name ?? "Unknown Artist",
-    }));
+    topSongs = songRows.map((song) => {
+      const artistRelation = (song as { artist?: { name?: string } | { name?: string }[] })
+        .artist;
+      const artistName = Array.isArray(artistRelation)
+        ? artistRelation[0]?.name
+        : artistRelation?.name;
+      return {
+        id: song.id,
+        title: song.title,
+        artist: artistName ?? "Unknown Artist",
+      };
+    });
   }
 
   if (albumRows) {
-    albums = albumRows.map((album) => ({
-      id: album.id,
-      title: album.title,
-      artist: album.artist?.name ?? "Unknown Artist",
-      coverUrl: album.cover_url ?? undefined,
-    }));
+    albums = albumRows.map((album) => {
+      const artistRelation = (album as { artist?: { name?: string } | { name?: string }[] })
+        .artist;
+      const artistName = Array.isArray(artistRelation)
+        ? artistRelation[0]?.name
+        : artistRelation?.name;
+      return {
+        id: album.id,
+        title: album.title,
+        artist: artistName ?? "Unknown Artist",
+        coverUrl: album.cover_url ?? undefined,
+      };
+    });
   }
 
   if (relatedRows) {

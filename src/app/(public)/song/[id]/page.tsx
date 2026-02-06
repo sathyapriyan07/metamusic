@@ -35,9 +35,14 @@ export default async function SongPage({ params }: SongPageProps) {
       .single();
 
     if (songRow) {
+      const artistRelation = (songRow as { artist?: { name?: string } | { name?: string }[] })
+        .artist;
+      const artistName = Array.isArray(artistRelation)
+        ? artistRelation[0]?.name
+        : artistRelation?.name;
       song = {
         title: songRow.title,
-        artist: songRow.artist?.name ?? "Unknown Artist",
+        artist: artistName ?? "Unknown Artist",
         cover_url: songRow.cover_url ?? song.cover_url,
         duration: songRow.duration ?? "",
         language: songRow.language ?? "",

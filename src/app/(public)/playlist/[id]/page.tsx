@@ -49,12 +49,20 @@ export default async function PlaylistPage({ params }: PlaylistPageProps) {
   if (songRows) {
     songs = songRows
       .map((row) => row.song)
-      .filter(Boolean)
-      .map((song) => ({
-        id: song.id,
-        title: song.title,
-        artist: song.artist?.name ?? "Unknown Artist",
-      }));
+      .filter((song): song is { id: string; title: string; artist?: { name?: string } | { name?: string }[] } =>
+        Boolean(song)
+      )
+      .map((song) => {
+        const artistRelation = song.artist;
+        const artistName = Array.isArray(artistRelation)
+          ? artistRelation[0]?.name
+          : artistRelation?.name;
+        return {
+          id: song.id,
+          title: song.title,
+          artist: artistName ?? "Unknown Artist",
+        };
+      });
   }
 
   return (

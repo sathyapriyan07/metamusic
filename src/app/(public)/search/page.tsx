@@ -98,7 +98,7 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
         <div className="space-y-4">
           <div className="flex items-center justify-between">
             <h2 className="text-lg font-semibold">
-              {results.count} results for "{query}"
+              {results.count} results for &quot;{query}&quot;
             </h2>
             <span className="text-xs text-muted-foreground">
               Page {page} of {totalPages}

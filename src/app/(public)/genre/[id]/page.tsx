@@ -30,7 +30,7 @@ export default async function GenreDetailPage({ params }: GenrePageProps) {
 
   const { data: songRows } = await supabase
     .from("songs")
-    .select("id,title,cover_url,artists(name)")
+    .select("id,title,cover_url,artist:artists(name)")
     .eq("is_trending", true)
     .limit(12);
 
@@ -43,7 +43,7 @@ export default async function GenreDetailPage({ params }: GenrePageProps) {
   const songs = (songRows ?? []).map((song) => ({
     id: song.id,
     title: song.title,
-    artist: song.artists?.name ?? "Unknown Artist",
+    artist: song.artist?.name ?? "Unknown Artist",
     coverUrl: song.cover_url ?? undefined,
   }));
 

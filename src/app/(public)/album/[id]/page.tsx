@@ -31,14 +31,14 @@ export default async function AlbumPage({ params }: AlbumPageProps) {
 
   const { data: albumRow } = await supabase
     .from("albums")
-    .select("title,cover_url,description,release_date,artists(name)")
+    .select("title,cover_url,description,release_date,artist:artists(name)")
     .eq("id", params.id)
     .single();
 
   if (albumRow) {
     album = {
       title: albumRow.title,
-      artist: albumRow.artists?.name ?? "Unknown Artist",
+      artist: albumRow.artist?.name ?? "Unknown Artist",
       cover_url: albumRow.cover_url ?? "",
       description: albumRow.description ?? "",
       release_date: albumRow.release_date?.toString() ?? "",
@@ -47,7 +47,7 @@ export default async function AlbumPage({ params }: AlbumPageProps) {
 
   const { data: songRows } = await supabase
     .from("songs")
-    .select("id,title,artists(name)")
+    .select("id,title,artist:artists(name)")
     .eq("album_id", params.id)
     .order("created_at", { ascending: true });
 
@@ -55,7 +55,7 @@ export default async function AlbumPage({ params }: AlbumPageProps) {
     songs = songRows.map((song) => ({
       id: song.id,
       title: song.title,
-      artist: song.artists?.name ?? "Unknown Artist",
+      artist: song.artist?.name ?? "Unknown Artist",
     }));
   }
 

@@ -28,16 +28,16 @@ export default async function SongPage({ params }: SongPageProps) {
   };
 
   if (hasSupabase) {
-    const { data: songRow } = await supabase
-      .from("songs")
-      .select("title,cover_url,duration,language,lyrics,release_date,albums(title),artists(name)")
+  const { data: songRow } = await supabase
+    .from("songs")
+    .select("title,cover_url,duration,language,lyrics,release_date,albums(title),artist:artists(name)")
       .eq("id", params.id)
       .single();
 
     if (songRow) {
       song = {
         title: songRow.title,
-        artist: songRow.artists?.name ?? "Unknown Artist",
+        artist: songRow.artist?.name ?? "Unknown Artist",
         cover_url: songRow.cover_url ?? song.cover_url,
         duration: songRow.duration ?? "",
         language: songRow.language ?? "",

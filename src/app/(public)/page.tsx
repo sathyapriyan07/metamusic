@@ -36,12 +36,12 @@ export default async function HomePage() {
     ] = await Promise.all([
         supabase
           .from("songs")
-          .select("id,title,cover_url,artists(name)")
+          .select("id,title,cover_url,artist:artists(name)")
           .eq("is_trending", true)
           .limit(12),
         supabase
           .from("albums")
-          .select("id,title,cover_url,artists(name)")
+          .select("id,title,cover_url,artist:artists(name)")
           .eq("is_trending", true)
           .limit(12),
         supabase
@@ -84,7 +84,7 @@ export default async function HomePage() {
       songs = songRows.map((song) => ({
         id: song.id,
         title: song.title,
-        artist: song.artists?.name ?? "Unknown Artist",
+        artist: song.artist?.name ?? "Unknown Artist",
         coverUrl: song.cover_url ?? undefined,
       }));
     }
@@ -92,7 +92,7 @@ export default async function HomePage() {
       albums = albumRows.map((album) => ({
         id: album.id,
         title: album.title,
-        artist: album.artists?.name ?? "Unknown Artist",
+        artist: album.artist?.name ?? "Unknown Artist",
         coverUrl: album.cover_url ?? undefined,
       }));
     }
@@ -116,13 +116,13 @@ export default async function HomePage() {
     if (topSongChart?.reference_id) {
       const { data: topSongRow } = await supabase
         .from("songs")
-        .select("title,cover_url,artists(name)")
+        .select("title,cover_url,artist:artists(name)")
         .eq("id", topSongChart.reference_id)
         .single();
       if (topSongRow) {
         topSong = {
           title: topSongRow.title,
-          artist: topSongRow.artists?.name ?? "Unknown Artist",
+          artist: topSongRow.artist?.name ?? "Unknown Artist",
           coverUrl: topSongRow.cover_url ?? undefined,
         };
       }
@@ -131,13 +131,13 @@ export default async function HomePage() {
     if (topAlbumChart?.reference_id) {
       const { data: topAlbumRow } = await supabase
         .from("albums")
-        .select("title,cover_url,artists(name)")
+        .select("title,cover_url,artist:artists(name)")
         .eq("id", topAlbumChart.reference_id)
         .single();
       if (topAlbumRow) {
         topAlbum = {
           title: topAlbumRow.title,
-          artist: topAlbumRow.artists?.name ?? "Unknown Artist",
+          artist: topAlbumRow.artist?.name ?? "Unknown Artist",
           coverUrl: topAlbumRow.cover_url ?? undefined,
         };
       }

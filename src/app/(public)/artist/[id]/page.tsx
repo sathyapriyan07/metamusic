@@ -42,14 +42,14 @@ export default async function ArtistPage({ params }: ArtistPageProps) {
 
   const { data: songRows } = await supabase
     .from("songs")
-    .select("id,title,cover_url,artists(name)")
+    .select("id,title,cover_url,artist:artists(name)")
     .eq("artist_id", params.id)
     .order("created_at", { ascending: false })
     .limit(5);
 
   const { data: albumRows } = await supabase
     .from("albums")
-    .select("id,title,cover_url,artists(name)")
+    .select("id,title,cover_url,artist:artists(name)")
     .eq("artist_id", params.id)
     .order("release_date", { ascending: false })
     .limit(8);
@@ -64,7 +64,7 @@ export default async function ArtistPage({ params }: ArtistPageProps) {
     topSongs = songRows.map((song) => ({
       id: song.id,
       title: song.title,
-      artist: song.artists?.name ?? "Unknown Artist",
+      artist: song.artist?.name ?? "Unknown Artist",
     }));
   }
 
@@ -72,7 +72,7 @@ export default async function ArtistPage({ params }: ArtistPageProps) {
     albums = albumRows.map((album) => ({
       id: album.id,
       title: album.title,
-      artist: album.artists?.name ?? "Unknown Artist",
+      artist: album.artist?.name ?? "Unknown Artist",
       coverUrl: album.cover_url ?? undefined,
     }));
   }

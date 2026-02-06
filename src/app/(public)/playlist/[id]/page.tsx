@@ -43,7 +43,7 @@ export default async function PlaylistPage({ params }: PlaylistPageProps) {
 
   const { data: songRows } = await supabase
     .from("playlist_songs")
-    .select("song:songs(id,title,artists(name))")
+    .select("song:songs(id,title,artist:artists(name))")
     .eq("playlist_id", params.id);
 
   if (songRows) {
@@ -53,7 +53,7 @@ export default async function PlaylistPage({ params }: PlaylistPageProps) {
       .map((song) => ({
         id: song.id,
         title: song.title,
-        artist: song.artists?.name ?? "Unknown Artist",
+        artist: song.artist?.name ?? "Unknown Artist",
       }));
   }
 

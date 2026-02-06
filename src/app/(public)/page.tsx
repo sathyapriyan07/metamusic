@@ -81,20 +81,34 @@ export default async function HomePage() {
       ]);
 
     if (songRows) {
-      songs = songRows.map((song) => ({
-        id: song.id,
-        title: song.title,
-        artist: song.artist?.name ?? "Unknown Artist",
-        coverUrl: song.cover_url ?? undefined,
-      }));
+      songs = songRows.map((song) => {
+        const artistRelation = (song as { artist?: { name?: string } | { name?: string }[] })
+          .artist;
+        const artistName = Array.isArray(artistRelation)
+          ? artistRelation[0]?.name
+          : artistRelation?.name;
+        return {
+          id: song.id,
+          title: song.title,
+          artist: artistName ?? "Unknown Artist",
+          coverUrl: song.cover_url ?? undefined,
+        };
+      });
     }
     if (albumRows) {
-      albums = albumRows.map((album) => ({
-        id: album.id,
-        title: album.title,
-        artist: album.artist?.name ?? "Unknown Artist",
-        coverUrl: album.cover_url ?? undefined,
-      }));
+      albums = albumRows.map((album) => {
+        const artistRelation = (album as { artist?: { name?: string } | { name?: string }[] })
+          .artist;
+        const artistName = Array.isArray(artistRelation)
+          ? artistRelation[0]?.name
+          : artistRelation?.name;
+        return {
+          id: album.id,
+          title: album.title,
+          artist: artistName ?? "Unknown Artist",
+          coverUrl: album.cover_url ?? undefined,
+        };
+      });
     }
     if (artistRows) {
       artists = artistRows.map((artist) => ({
@@ -120,9 +134,14 @@ export default async function HomePage() {
         .eq("id", topSongChart.reference_id)
         .single();
       if (topSongRow) {
+        const artistRelation = (topSongRow as { artist?: { name?: string } | { name?: string }[] })
+          .artist;
+        const artistName = Array.isArray(artistRelation)
+          ? artistRelation[0]?.name
+          : artistRelation?.name;
         topSong = {
           title: topSongRow.title,
-          artist: topSongRow.artist?.name ?? "Unknown Artist",
+          artist: artistName ?? "Unknown Artist",
           coverUrl: topSongRow.cover_url ?? undefined,
         };
       }
@@ -135,9 +154,14 @@ export default async function HomePage() {
         .eq("id", topAlbumChart.reference_id)
         .single();
       if (topAlbumRow) {
+        const artistRelation = (topAlbumRow as { artist?: { name?: string } | { name?: string }[] })
+          .artist;
+        const artistName = Array.isArray(artistRelation)
+          ? artistRelation[0]?.name
+          : artistRelation?.name;
         topAlbum = {
           title: topAlbumRow.title,
-          artist: topAlbumRow.artist?.name ?? "Unknown Artist",
+          artist: artistName ?? "Unknown Artist",
           coverUrl: topAlbumRow.cover_url ?? undefined,
         };
       }

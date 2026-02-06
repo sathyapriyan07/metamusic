@@ -1,26 +1,55 @@
-@import "tailwindcss";
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: 210 10% 6%;
+  --foreground: 0 0% 96%;
+  --card: 210 10% 10%;
+  --card-foreground: 0 0% 96%;
+  --primary: 141 72% 48%;
+  --primary-foreground: 0 0% 5%;
+  --secondary: 210 10% 14%;
+  --secondary-foreground: 0 0% 96%;
+  --muted: 210 9% 16%;
+  --muted-foreground: 0 0% 65%;
+  --accent: 200 90% 55%;
+  --accent-foreground: 0 0% 5%;
+  --border: 210 9% 18%;
+  --input: 210 9% 18%;
+  --ring: 141 72% 48%;
+  --radius: 14px;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+* {
+  @apply border-border;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+html {
+  color-scheme: dark;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  @apply bg-background text-foreground antialiased;
+  font-feature-settings: "ss01" 1, "ss02" 1, "cv01" 1, "cv02" 1;
+}
+
+::selection {
+  background: hsl(var(--primary) / 0.35);
+}
+
+.glass {
+  background: linear-gradient(180deg, rgba(30, 34, 40, 0.6), rgba(16, 18, 22, 0.8));
+  box-shadow: 0 10px 30px -20px rgba(0, 0, 0, 0.7);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(14px);
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
 }

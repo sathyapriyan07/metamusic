@@ -6,10 +6,10 @@ export async function searchAll(query: string) {
   const trimmed = query.trim();
   if (!trimmed) {
     return {
-      songs: [] as (Song & { artist?: { name: string } | null })[],
-      albums: [] as (Album & { artist?: { name: string } | null })[],
-      artists: [] as Artist[],
-      playlists: [] as Playlist[],
+      songs: [] as Array<{ id: string; title: string; cover_url?: string | null; artist?: { name: string } | null }>,
+      albums: [] as Array<{ id: string; title: string; cover_url?: string | null; artist?: { name: string } | null }>,
+      artists: [] as Array<{ id: string; name: string; image_url?: string | null; country?: string | null }>,
+      playlists: [] as Array<{ id: string; title: string; description?: string | null; cover_url?: string | null }>,
     };
   }
 
